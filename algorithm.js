@@ -1,3 +1,5 @@
+const { resolve } = require("dns");
+
 //call实现
 Function.prototype._call = function (context) {
   const _context = context || window;
@@ -105,4 +107,33 @@ function throttle(fn,delay) {
       timer = null;
     },delay)
   }
+}
+
+//promise.all实现
+Promise.prototype._all = (arr) => {
+  const result = [];
+  const length = arr.length;
+  let count = 0;
+
+  return new Promise((resolve,reject) => {
+    arr.forEach((p,index) => {
+      Promise.resolve(p).then(res => {
+        result[index] = res;
+        count ++;
+        length == count && resolve(result);
+      },err => reject(err))
+    })
+  })
+}
+
+//promise.race实现
+
+Promise.prototype._race = (arr) => {
+  return new Promise((resolve,reject) => {
+    arr.forEach((p) => {
+      Promise.resolve(p).then(res => {
+        resolve(res)
+      },err => reject(err))
+    })
+  })
 }
