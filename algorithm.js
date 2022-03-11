@@ -137,3 +137,127 @@ Promise.prototype._race = (arr) => {
     })
   })
 }
+
+//promise
+function Promise(fn) {
+  const self = this;
+  self.status = 'pedding';
+  self.data = undefined;
+  self.onFulfilledCallback = [];
+  self.onRejectedCallback = [];
+
+  function resolve(value) {
+    if(self.status === 'pedding') {
+      self.status = 'resolved';
+      self.data = value;
+      setTimeout(() => {
+        const length = self.onFulfilledCallback.length;
+        for(let i = 0; i < length; i ++) {
+          self.onFulfilledCallback[i](value);
+        }
+      })
+    }
+  }
+
+  function reject(reason) {
+    if(self.status === 'pedding') {
+      self.status = 'resolved';
+      self.data = reason;
+      setTimeout(() => {
+        const length = self.onRejectedCallback.length;
+        for(let i = 0; i < length; i ++) {
+          self.onRejectedCallback[i](reason);
+        }
+      })
+    }
+  }
+
+  try {
+    fn(resolve,reject);
+  } catch (e) {
+    reject(e);
+  }
+
+}
+
+
+Promise.prototype.then = (onFulfilled,onRejected) => {
+  const self = this;
+
+  onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (v) => {};
+  onRejected = typeof onFulfilled === 'function' ? onRejected : (v) => {};
+
+  if(self.status === 'resolved') {
+    return new Promise((resolve,reject) => {
+      setTimeout(() => {
+        try {
+          const res = onFulfilled(self.data);
+          if(res instanceof Promise) {
+            res.then(resolve,reject);
+          } else {
+            resolve(res);
+          }
+        }catch(e) {
+          reject(e);
+        }
+      })
+    })
+  }
+
+  if(self.status === 'rejected') {
+    return new Promise((resolve,reject) => {
+      setTimeout(() => {
+        try {
+          const res = onRejected(self.data);
+          if(res instanceof Promise) {
+            res.then(resolve,reject);
+          } else {
+            reject(res);
+          }
+        }catch(e) {
+          reject(e);
+        }
+      })
+    })
+
+  }
+
+  if(self.status == 'pedding') {
+    return new Promise((resolve,reject) => {
+      self.onFulfilledCallback.push(() => {
+        setTimeout(() => {
+          try {
+            const res = onFulfilled(self.data);
+            if(res instanceof Promise) {
+              res.then(resolve,reject);
+            } else {
+              resolve(res);
+            }
+          }catch(e) {
+            reject(e);
+          }          
+        })
+      })
+
+      self.onRejectedCallback.push(() => {
+        setTimeout(() => {
+          try {
+            const res = onRejected(self.data);
+            if(res instanceof Promise) {
+              res.then(resolve,reject);
+            } else {
+              reject(res);
+            }
+          }catch(e) {
+            reject(e);
+          }
+        })        
+      })
+
+    })
+
+
+
+  }
+
+}
