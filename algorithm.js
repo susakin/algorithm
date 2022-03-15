@@ -269,3 +269,87 @@ function flatten(arr) {
     return pre.concat(Array.isArray(cur) ? flatten(cur) : cur);
   },[]);
 }
+
+//发布订阅模式
+
+class  EventEmitter {
+  constructor() {
+    this._event = {};
+  }
+
+  on(eventName,callback) {
+    const callbacks = this._event[eventName] || [];
+    callbacks.push(callback);
+    this._event[eventName] = callbacks
+  }
+
+  emit(eventName,...args) {
+    const callbacks = this._event[eventName] || [];
+    callbacks.forEach(cb => cb(...args));
+  }
+
+  once(eventName,callback) {
+    const once = (...args) => {
+      callback(...args);
+      this.off(eventName,once);
+    }
+
+    this.on(eventName,once)
+
+  }
+
+  off(eventName,callback) {
+    const callbacks = this._event[eventName] || [];
+    this._event[eventName] = callbacks.filter(cb => cb != callback);
+  }
+
+}
+
+
+//树的层序遍历
+const levelOrder = function(root) {
+  const res = [];
+  if(!root) return res;
+
+  const queue = [root];
+  while(queue.length) {
+    const level = [];
+    const len = queue.length;
+    for(let i =0 ; i< len; i ++) {
+      const node = queue.pop();
+      level.push(node.val);
+      node.left && queue.push(node.left);
+      node.right && queue.push(node.right);
+    }
+
+    res.push(level);
+  }
+  return res;
+}
+
+//前序遍历
+const preOrder = (node) => {
+  if(node !== null) {
+    console.log(node.val);
+    preOrder(node.left);
+    preOrder(node.right);
+  }
+}
+
+//中序遍历
+const inOrder= (node) => {
+  if(node !== null) {
+    inOrder(node.left);
+    console.log(node.val);
+    inOrder(node.right);
+  }
+}
+
+//后序遍历
+const postOrder = (node) => {
+  if(node !== null) {
+    postOrder(node.left);
+    postOrder(node.right);
+    console.log(node.val);
+  }
+}
