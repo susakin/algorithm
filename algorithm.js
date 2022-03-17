@@ -353,3 +353,10 @@ const postOrder = (node) => {
     console.log(node.val);
   }
 }
+
+//请求并发控制
+function requestWithLimit(urls,num,callback) {
+  (function request(res) {
+    urls.length ? Promise.all(urls.splice(0,num).map(url => fetch(url))).then(r => request(res.concat(r))) : callback(res);
+  })([]);
+}
