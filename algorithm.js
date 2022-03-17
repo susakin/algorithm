@@ -360,3 +360,15 @@ function requestWithLimit(urls,num,callback) {
     urls.length ? Promise.all(urls.splice(0,num).map(url => fetch(url))).then(r => request(res.concat(r))) : callback(res);
   })([]);
 }
+
+//instanceof
+function _instanceof(left,right) {
+  const prototype = right.prototype;
+  left = left.__proto__;
+  while(left) {
+    if(prototype == left)
+      return true;
+    left = left.__proto__;
+  }
+  return false;
+}
