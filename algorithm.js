@@ -372,3 +372,40 @@ function _instanceof(left,right) {
   }
   return false;
 }
+
+//实现一个sleep
+function delay(func,seconds,...args) {
+  return new Promise((resolve,reject) => {
+    setTimeout(() => {
+      Promise.resolve(func(...args)).then(resolve).catch(reject);
+    },seconds)
+  })
+}
+
+//带并发得异步调度器Scheduler
+class Scheduler {
+  constructor() {
+    this.tasks = [];
+    this.running = 0;
+    this.maxRunningLength = 2;
+  }
+
+  add(promiseMaker) {
+    if(this.running < this.maxRunningLength) {
+      this.run(promiseMaker);
+    } else {
+      this.tasks.push(promiseMaker);
+    }
+  }
+
+  run(promiseMaker) {
+    this.running ++ ;
+    promiseMaker().then(() => {
+      this.running --;
+      if(this.tasks.length > 0) {
+        this.run(this.tasks.shift());
+      }
+    })
+  }
+
+}
