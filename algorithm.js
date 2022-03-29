@@ -438,4 +438,31 @@ function createStore(reducer) {
     getState
   }
 
+//leecode 路径和
+function hasPathSum(root,targetSum) {
+  if(root == null) {
+    return false;
+  }
+
+  if(root.left === null && root.right === null) {
+    return root.val == targetSum;
+  }
+
+  return hasPathSum(root.left,targetSum - root.val) || hasPathSum(root.right,targetSum - root.val)
+
+
+}
+
+
+//reduce实现
+Array.prototype._reduce = (fn = () => {},initialValue) => {
+  const _this = this;
+  let res = initialValue ? initialValue : _this[0];
+
+  for(let i = 0; i < _this.length; i ++) {
+    res = fn(res,arr[i],i,_this);
+  }
+
+  return res;
+
 }
