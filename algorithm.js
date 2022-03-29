@@ -181,11 +181,8 @@ function Promise(fn) {
 }
 
 
-Promise.prototype.then = (onFulfilled,onRejected) => {
+Promise.prototype.then = (onFulfilled = (v) => {},onRejected =(v) => {}) => {
   const self = this;
-
-  onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (v) => {};
-  onRejected = typeof onFulfilled === 'function' ? onRejected : (v) => {};
 
   if(self.status === 'resolved') {
     return new Promise((resolve,reject) => {
