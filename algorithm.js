@@ -161,7 +161,7 @@ function Promise(fn) {
 
   function reject(reason) {
     if(self.status === 'pedding') {
-      self.status = 'resolved';
+      self.status = 'rejected';
       self.data = reason;
       setTimeout(() => {
         const length = self.onRejectedCallback.length;
@@ -406,6 +406,36 @@ class Scheduler {
         this.run(this.tasks.shift());
       }
     })
+  }
+
+}
+
+
+//简易的Redux
+function createStore(reducer) {
+  let state;
+  const listeners = [];
+
+  function subscribe(callback) {
+    listeners.push(callback);
+  }
+
+  function dispatch(action) {
+    state = reducer();
+    for(let i = 0; i < listeners.length; i ++) {
+      const listener = listeners[i];
+      listener();
+    }
+  }
+
+  function getState() {
+    return state;
+  }
+
+  const store = {
+    subscribe,
+    dispatch,
+    getState
   }
 
 }
