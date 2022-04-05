@@ -463,3 +463,19 @@ Array.prototype._reduce = (fn = () => {},initialValue) => {
   return res;
 
 }
+
+//数组最大连续子序列和
+const maxSubArray = function(nums) {
+  let res = nums[0];
+  let sum = 0
+  for(let num of nums) {
+    if(sum + num > num) {
+      sum += num;
+    } else {
+      sum = num;
+    }
+    res = Math.max(res,sum);
+  }
+
+  return res;
+}
