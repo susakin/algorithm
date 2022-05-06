@@ -434,7 +434,7 @@ function createStore(reducer) {
     dispatch,
     getState
   }
-
+}
 //leecode 路径和
 function hasPathSum(root,targetSum) {
   if(root == null) {
@@ -462,4 +462,32 @@ Array.prototype._reduce = (fn = () => {},initialValue) => {
 
   return res;
 
+}
+
+//两数之和
+const twoSum = (nums,target) => {
+  const len = nums.length;
+  for(let i = 0; i  < len; i++) {
+      for(let j = 0; j < len; j++) {
+          if(i !=j && nums[i] + nums[j] == target){
+            return [i,j];
+          }
+      }
+  }
+}
+
+//三数之和
+const threeSum = (nums,target) => {
+  const res = [];
+  const len = nums.length;
+  for(let i = 0; i < len; i ++) {
+      for(let j = i + 1; j < len; j ++) {
+          for(let k = j  + 1; k < len; k ++ ) {
+              if(nums[i] + nums[j] + nums[k] === 0) {
+                res.push(nums[i],nums[j],nums[k]);
+              }
+          }
+      }
+  }
+  return res;
 }
