@@ -418,7 +418,7 @@ function createStore(reducer) {
   }
 
   function dispatch(action) {
-    state = reducer();
+    state = reducer(action);
     for(let i = 0; i < listeners.length; i ++) {
       const listener = listeners[i];
       listener();
@@ -435,7 +435,7 @@ function createStore(reducer) {
     getState
   }
 }
-//leecode 路径和
+// 路径和
 function hasPathSum(root,targetSum) {
   if(root == null) {
     return false;
@@ -489,5 +489,19 @@ const threeSum = (nums,target) => {
           }
       }
   }
+}
+//数组最大连续子序列和
+const maxSubArray = function(nums) {
+  let res = nums[0];
+  let sum = 0
+  for(let num of nums) {
+    if(sum + num > num) {
+      sum += num;
+    } else {
+      sum = num;
+    }
+    res = Math.max(res,sum);
+  }
+
   return res;
 }
