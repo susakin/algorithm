@@ -505,3 +505,25 @@ const maxSubArray = function(nums) {
 
   return res;
 }
+
+
+//快速排序
+const quickSort = (arr) => {
+  if(arr.length <= 1) return arr;
+  const n = arr[Math.floor(arr.length/2)];
+
+  const left = [];
+  const right = [];
+
+  for(let i = 0; i < arr.length; i ++) {
+    const t = arr[i];
+    if(t > n) {
+      right.push(n);
+    } else {
+      left.push(n);
+    }
+  }
+
+  return quickSort(left).concat([n],quickSort(right));
+
+}
