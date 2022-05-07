@@ -527,3 +527,39 @@ const quickSort = (arr) => {
   return quickSort(left).concat([n],quickSort(right));
 
 }
+
+//实现一个lazyMan
+const sleepTask = () => new Promise((resolve) => {
+  setTimeout(() => resolve(console.log(`wake up after ${d}`)),d  * 1000);
+})
+
+function lazyMan(name) {
+  const ctx = {};
+  const tasks = [() => console.log(`Hi! This is ${name}`)];
+
+  ctx.sleep = (d) => {
+    tasks.push(sleepTask(d));
+    return ctx;
+  }
+
+  ctx.sleepFirst = (d) => {
+    tasks.unshift(sleepTask(d));
+    return ctx;
+  }
+
+  ctx.eat = (food) => {
+    tasks.push(() => console.log(`Eat ${food}`))
+    return ctx;
+  }
+
+  (() => {
+    setTimeout(async () => {
+      while(tasks.length) {
+        await tasks.shift()();
+      }
+    })
+  })()
+
+  return ctx;
+
+}
