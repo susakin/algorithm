@@ -417,7 +417,7 @@ function createStore(reducer) {
   }
 
   function dispatch(action) {
-    state = reducer();
+    state = reducer(action);
     for(let i = 0; i < listeners.length; i ++) {
       const listener = listeners[i];
       listener();
@@ -433,8 +433,8 @@ function createStore(reducer) {
     dispatch,
     getState
   }
-
-//leecode 路径和
+}
+// 路径和
 function hasPathSum(root,targetSum) {
   if(root == null) {
     return false;
@@ -463,6 +463,32 @@ Array.prototype._reduce = (fn = () => {},initialValue) => {
 
 }
 
+//两数之和
+const twoSum = (nums,target) => {
+  const len = nums.length;
+  for(let i = 0; i  < len; i++) {
+      for(let j = 0; j < len; j++) {
+          if(i !=j && nums[i] + nums[j] == target){
+            return [i,j];
+          }
+      }
+  }
+}
+
+//三数之和
+const threeSum = (nums,target) => {
+  const res = [];
+  const len = nums.length;
+  for(let i = 0; i < len; i ++) {
+      for(let j = i + 1; j < len; j ++) {
+          for(let k = j  + 1; k < len; k ++ ) {
+              if(nums[i] + nums[j] + nums[k] === 0) {
+                res.push(nums[i],nums[j],nums[k]);
+              }
+          }
+      }
+  }
+}
 //数组最大连续子序列和
 const maxSubArray = function(nums) {
   let res = nums[0];
@@ -479,6 +505,7 @@ const maxSubArray = function(nums) {
   return res;
 }
 
+//大数相乘
 const multiply  = function(a,b) {
   const arr = new Array(a.length + b.length).fill(0);
 
@@ -490,4 +517,60 @@ const multiply  = function(a,b) {
     }
   }
   return arr.join('').replace(/^0+/,'');
+}
+//快速排序
+const quickSort = (arr) => {
+  if(arr.length <= 1) return arr;
+  const n = arr[Math.floor(arr.length/2)];
+
+  const left = [];
+  const right = [];
+
+  for(let i = 0; i < arr.length; i ++) {
+    const t = arr[i];
+    if(t > n) {
+      right.push(n);
+    } else {
+      left.push(n);
+    }
+  }
+
+  return quickSort(left).concat([n],quickSort(right));
+
+}
+
+//实现一个lazyMan
+const sleepTask = () => new Promise((resolve) => {
+  setTimeout(() => resolve(console.log(`wake up after ${d}`)),d  * 1000);
+})
+
+function lazyMan(name) {
+  const ctx = {};
+  const tasks = [() => console.log(`Hi! This is ${name}`)];
+
+  ctx.sleep = (d) => {
+    tasks.push(sleepTask(d));
+    return ctx;
+  }
+
+  ctx.sleepFirst = (d) => {
+    tasks.unshift(sleepTask(d));
+    return ctx;
+  }
+
+  ctx.eat = (food) => {
+    tasks.push(() => console.log(`Eat ${food}`))
+    return ctx;
+  }
+
+  (() => {
+    setTimeout(async () => {
+      while(tasks.length) {
+        await tasks.shift()();
+      }
+    })
+  })()
+
+  return ctx;
+
 }
