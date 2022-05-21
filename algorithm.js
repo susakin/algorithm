@@ -1,10 +1,9 @@
 const { resolve } = require("dns");
 
 //call实现
-Function.prototype._call = function (context) {
+Function.prototype._call = function (context,...args) {
   const _context = context || window;
   _context.fn = this;
-  const args = [...arguments].slice(1);
   const res = _context.fn(...args);
   delete _context.fn;
   return res;
@@ -12,10 +11,9 @@ Function.prototype._call = function (context) {
 
 
 //apply实现
-Function.prototype._apply = function (context) {
+Function.prototype._apply = function (context,args) {
   const _context = context || window;
   _context.fn = this;
-  const args = arguments[1] || [];
   const res = _context.fn(...args);
   delete _context.fn;
   return res;
@@ -23,16 +21,17 @@ Function.prototype._apply = function (context) {
 
 
 //bind函数实现
-Function.prototype._bind = function (context) {
-  const _this = this; 
-  const args = [...arguments].slice(1);
+Function.prototype._bind = function (context,...args) {
+  const _this = this;   
+  const h = function () {};
+  h.prototype = _this.prototype;
 
-  return function f() {
-    if(this instanceof f) {
-      return new _this(...args,...arguments);
-    }
-    return _this.apply(context,args.concat(...arguments))
+  const res = function() {
+    return _this.apply(this instanceof res ? this : context,context,args.concat(...arguments))
   }
+
+  res.prototype = new h();
+  return res;
 
 }
 
@@ -478,4 +477,17 @@ const maxSubArray = function(nums) {
   }
 
   return res;
+}
+
+const multiply  = function(a,b) {
+  const arr = new Array(a.length + b.length).fill(0);
+
+  for(let i = a.length - 1;i >= 0; i--) {
+    for(let j = b.length -1; j >= 0; j--) {
+      const m = a[i] * b[j] + arr[i + j +1];
+      arr[i + j] = Math.floor(m/10);
+      arr[i + j + 1] = m % 10;
+    }
+  }
+  return arr.join('').replace(/^0+/,'');
 }
