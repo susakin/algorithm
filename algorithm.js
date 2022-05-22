@@ -1,4 +1,3 @@
-const { resolve } = require("dns");
 
 //call实现
 Function.prototype._call = function (context,...args) {
@@ -573,4 +572,38 @@ function lazyMan(name) {
 
   return ctx;
 
+}
+
+
+/**
+ * LRU 是Least Recently Used的缩写，即是最近最少使用，是一种常见的页面置换算法，选择内存中最久未使用的页面予以淘汰
+ */
+
+const LRUCache = function (capacity) {
+  this.cache = new Map();
+  this.capacity = capacity;
+}
+
+LRUCache.prototype.get = function(key) {
+  if(this.cache.has(key)) {
+    //存在即更新
+    const _key = this.cache.get(key);
+    this.cache.delete(_key);
+    this.cache.set(key,temp);
+    return _key;
+  }
+  return -1;
+}
+
+LRUCache.prototype.put = function(key,value){
+  if(this.cache.has(key)) {
+    //存在即更新（删除后加入）
+    this.cache.delete(key);
+  } else if(this.cache.size >= this.capacity) {
+    // 不存在即加入
+    // 缓存超过最大值，则移除最近没有使用的
+    // new Map().keys() 返回一个新的 Iterator 对象
+    this.cache.delete(this.cache.keys().next().value)    ;
+  }
+  this.cache.set(key,value);
 }
