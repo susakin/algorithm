@@ -655,3 +655,142 @@ let o1 = new Observer('o1', s)
 let o2 = new Observer('02', s)
 
 s.setState(12)
+
+//字节高频算法题
+//https://juejin.cn/post/6947842412102287373#comment
+
+//链表
+/**
+ * 判断回文链表
+ * https://leetcode.cn/problems/palindrome-linked-list/solution/by-allan2coder-azf1/
+ */ 
+const isPalindrome = function(head ) {
+  const arr = [];
+  while(head !== null) {
+    arr.push(head.val);
+    head = head.next;
+  } 
+  for(let i = 0,j = arr.length - 1; i < arr.length -1,j > 0; i ++ ,j --) {
+    if(arr[i] != arr[j]) return false;
+  }
+  return true;
+}
+
+
+/**
+ * 反转链表
+ * https://leetcode.cn/problems/reverse-linked-list/solution/by-1105389168-oncv/
+ */
+
+function reverseList(head) {
+  let prev = null;
+  let cur = head;
+  while(cur) {
+    const next = cur.next;
+    cur.next = prev;
+    prev = cur;
+    cur = next;
+  }
+  return prev;
+}
+/**
+ * 环形链表
+ * https://leetcode.cn/problems/linked-list-cycle/
+ */
+
+const hasCycle = function(head) {
+  while(head) {
+    if(head.visited) return true;
+    head.visited = true;
+    head = head.next;
+  }
+  return false;
+}
+
+/**
+ * 相交链表
+ * https://leetcode.cn/problems/intersection-of-two-linked-lists/solution/160-xiang-jiao-lian-biao-by-1105389168-h2ai/
+ */
+
+function getIntersectionNode(headA,headB) {
+  let pA = headA,pB = headB;
+  while(pA !== pB) {
+    pA = pA === null ? headB : pA.next;
+    pB = pB === null ? headA : pB.next;
+  }
+  return pA;
+}
+
+/**
+ * 最长回文子串
+ * https://leetcode.cn/problems/longest-palindromic-substring/solution/by-bei-chen-8h-1b9m/
+ */
+const longestPalidrome = function(s){
+  let max = '';
+  function helper(l,r) {
+    while(l >=0 &&r < s.length && s[l] === s[r]) {
+      l --;
+      r ++
+    }
+    const str = s.slice(l +1,r);
+    if(str.length >max.length) max = str;
+  }
+  for(let i = 0; i < s.length;i ++) {
+    helper(i,i);
+    helper(i, i +1);
+  }
+  return max;
+}
+/**
+ * 最长公共子串
+ * https://leetcode.cn/problems/longest-common-prefix/solution/by-lzxjack-jlvi/
+ */
+const longestCommonPrefix = strs => {
+  strs.sort();
+  const [start,end] = [str[0],str[strs.length - 1]];
+  let count = 0;
+  for(let i = 0; i < start.length; i ++) {
+    if(start[i] === end[i]) {
+      count ++;
+    } else {
+      break;
+    }
+  }
+  return start.slice(0,count);
+}
+/**
+ * 无重复字符的最长子串
+ * https://leetcode.cn/problems/longest-substring-without-repeating-characters/
+ */   
+const lengthOfLogestSubstring = (str) => {
+  const res = [];
+  let max = 0;
+  for(let s of str) {
+    while(res.includes(s)) {
+      res.shift();
+    }
+    res.push(s);
+    max = Math.max(max,res.length);
+  }
+  return max;
+}
+/**
+ * 最长连续递增序列
+ * https://leetcode.cn/problems/longest-continuous-increasing-subsequence/solution/dai-ma-jian-ji-yi-chong-huan-bu-cuo-de-j-jiw8/
+ */ 
+const findLengthOfLCIS = (nums) =>{
+  if(nums.length < 2) return nums.length;
+  let left = 0, current = 0, right = 1,len = 1;
+  while(right < nums.length) {
+    if(nums[right] <= nums[current]) {
+      left = right;
+    }
+    len = Max(len,right - left + 1);
+    current ++;
+    right ++;
+  }
+  return len;
+}
+/**
+ * 
+ */
