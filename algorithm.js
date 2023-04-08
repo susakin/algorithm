@@ -792,5 +792,90 @@ const findLengthOfLCIS = (nums) =>{
   return len;
 }
 /**
+ * 斐波拉切数列
  * 
  */
+const fib = (n) => {
+  if(n < 2) return n;
+  return fib(n -1) + fib(n - 2);
+}
+
+const fib1 = (n) => { 
+  if(n < 2) return n;
+  const arr = new Array(n);
+  arr[0] = 0;
+  arr[1] = 1;
+  for(i = 2; i <= n; i++) {
+    arr[i] = arr[i -1] + arr[i - 2];
+  }
+  return arr[n];
+}
+/**
+ * 数组全排列
+ */
+const permute = function (nums) {
+  if(nums.length === 0) {
+    return nums;
+  }
+  const res = [];
+  function dfs(arr) {
+    if(arr.length == nums.length) {
+      res.push(arr);
+      return;
+    }
+    for(let i =0; i <nums.length;i ++) {
+      const e = nums[i];
+      if(!arr.includes(e)) {
+        dfs([...arr,e]);
+      }
+    }
+  }
+  dfs([]);
+  return res;
+}
+/**
+ * 盛最多水
+ * https://leetcode.cn/problems/container-with-most-water/solution/jsjie-ti-si-lu-qing-xi-ming-liao-by-inte-aav9/
+ */
+const maxArea = (height) => {
+  let max = 0,left = 0, right = height.length - 1;
+  while(left < right) {
+    const temp = (right - left) * Math.min(height[left],height[right]);
+    max = Math.max(temp,max);
+    if(height[left] < height[right]) {
+      left ++ ;
+    } else{
+      right --;
+    }
+  }
+  return max;
+}
+
+/**
+ * 买股票的最佳时机
+ * https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/solution/maimai-by-1105389168-heyc/
+ */ 
+const maxProfit = (prices) => {  
+  if(prices.length == 0)  return 0;
+  let min = prices[0];
+  let max = 0;
+  for(let i of prices) {
+    min = Math.min(min,i);
+    max = Math.max(max,i - min);
+  }
+  return max;
+}
+/**
+ * 股票买卖最佳
+ * https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/solution/dai-ma-jian-ji-de-jie-fa-jsban-ben-by-it-q49l/
+ */
+const maxProfit1 = (prices) => {
+  if(prices.length < 2) return 0;
+  let res = 0;
+  for(let i = 0; i < prices.length; i ++) {
+    if(prices[i] > prices[i - 1] ) {
+      res +- prices[i] - prices[i-1];
+    }
+  }
+  return res;
+}
