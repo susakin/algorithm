@@ -39,7 +39,7 @@ function deepClone (obj) {
   if(typeof obj !== 'object') return;
   const _obj = Array.isArray(obj) ? [] : {};
   for(let k in obj) {
-    if(obj.hasOwnPropery(k)) {
+    if(obj.hasOwnProperty(k)) {
       const val = obj[k];
       _obj[k] = typeof val === 'object' ? deepClone(val) : val
     }
@@ -68,7 +68,7 @@ const isValid = (s) => {
     const t  = s[i];
     if(map[i]) {
       stack.push(t);
-    } else if(t !== map[stack.pop]){
+    } else if(t !== map[stack.pop()]){
       return false;
     }
   }
@@ -76,8 +76,6 @@ const isValid = (s) => {
   return !stack.length;
 
 }
-
-//函数节流
 
 //函数防抖
 function debounce (fn ,delay) {
@@ -874,8 +872,40 @@ const maxProfit1 = (prices) => {
   let res = 0;
   for(let i = 0; i < prices.length; i ++) {
     if(prices[i] > prices[i - 1] ) {
-      res +- prices[i] - prices[i-1];
+      res += prices[i] - prices[i-1];
     }
   }
   return res;
+}
+
+//数组去重
+function unique(arr) {
+  return arr.reduce((prev,cur) => prev.includes(cur) ? prev :[...prev,cur],[]);
+}
+
+//大数相加
+function add(a,b) {
+  const maxLength = Math.max(a.length,b.length);
+  a = a.padStart(maxLength,0);
+  b = b.padStart(maxLength,0);
+  let t = 0;
+  let f = 0;//进位
+  let sum = '';
+  for(let i = maxLength - 1; i >= 0; i --) {
+    t = parseInt(a[i]) + parseInt(b[i]) + f;
+    f = Math.floor(t/10);
+    sum = t % 10 + sum;
+  }
+  if(f == 1) {
+    sum = '1' + sum;
+  }
+  return sum;
+}
+
+// 数组中第k大的元素
+function findKthLarget(nums,k) {
+  nums = nums.sort((a,b) =>{
+    return b - a;
+  })
+  return nums[k];
 }
